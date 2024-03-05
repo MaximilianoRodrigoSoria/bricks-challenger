@@ -23,8 +23,8 @@ public class ProductDTO {
     @Schema(description = "Stock product", example = "6")
     private int stock;
 
-    @Schema(description = "Category Product", example = "1")
-    private int category;
+    @Schema(description = "Category Product")
+    private CategoryDTO category;
 
     @Schema(description = "Registration status",  accessMode = Schema.AccessMode.READ_ONLY, allowableValues = {"ENABLED", "DISABLED"})
     private State state;

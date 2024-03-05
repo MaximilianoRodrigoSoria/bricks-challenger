@@ -7,7 +7,7 @@ import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CategoryMapper.class)
 public interface ProductMapper {
     @Mappings({
             @Mapping(source = "id", target = "id"),

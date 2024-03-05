@@ -10,9 +10,12 @@ import com.bricks.challanger.utils.GlobalConstants;
 import com.bricks.challanger.utils.enums.State;
 import com.bricks.challanger.utils.exceptions.IdNotFoundException;
 import com.bricks.challanger.utils.exceptions.SaveException;
+import com.bricks.challanger.utils.mappers.CategoryMapper;
 import com.bricks.challanger.utils.mappers.ProductMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private CategoryService categoryService;
@@ -28,15 +32,15 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     private ProductMapper mapper;
+
+    private CategoryMapper categoryMapper;
+
     private final String KEY = this.getClass().getSimpleName() + " ->";
 
     @Override
     public List<ProductDTO> readAll() {
 
-        var c = categoryService.readAll();
-        log.info(c.toString());
-
-        return productRepository.findAll()
+        return productRepository.findAllByState(State.ENABLED)
                 .stream()
                 .map(mapper::toModel)
                 .collect(Collectors.toList());
@@ -45,8 +49,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO created(ProductDTO request) {
         Product product = null;
+        var category = categoryService.findByNameAndCode(request.getCategory().getName(),request.getCategory().getCode());
         try {
+            request.setCategory(category);
+            request.setState(State.ENABLED);
             product = productRepository.save(mapper.toEntity(request));
+
         } catch (Exception e) {
             log.error("{} Registration could not be saved in products", KEY);
             throw new SaveException(GlobalConstants.PRODUCT_TABLE);
@@ -56,20 +64,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO read(Long id) {
-        var product = productRepository.findById(id).orElseThrow(()-> {
-        log.error("{} Error reading the product with the id {}", id, KEY);
+        var product = productRepository.findByIdAndState(id,State.ENABLED).orElseThrow(()-> {
+        log.error("{} Error reading the product with the id {}", KEY,id);
         throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE);});
         return mapper.toModel(product);
     }
 
     @Override
     public ProductDTO update(ProductDTO request, Long id) {
-        var product = productRepository.findById(id);
-        if (product.isEmpty()){
-            log.error("{} Error updating the product with the id {}", id, KEY);
-            throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE);
-        }
-        created(request);
+        var product =  productRepository.findByIdAndState(id,State.ENABLED).orElseThrow(()-> {
+            log.error("{} Error reading the product with the id {}", KEY,id);
+            throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE); });
+
+        var category = categoryService.findByNameAndCode(request.getCategory().getName(),request.getCategory().getCode());
+        BeanUtils.copyProperties(request, product);
+        product.setCategory(categoryMapper.toEntity(category));
+        product.setState(State.ENABLED);
+        productRepository.save(product);
         return request;
 
     }

@@ -33,7 +33,7 @@ public class CategoriesScheduledTask {
             log.error(KEY  + msg);
             throw new CategoriesNotFoundException(msg);
         }
-        categories.stream().map(categoryService::created);
+        categoryService.updateCategories(categories);
         log.info("{} The categories were updated", KEY);
     }
 }

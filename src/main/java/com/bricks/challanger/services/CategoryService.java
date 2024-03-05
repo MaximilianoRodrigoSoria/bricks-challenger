@@ -4,8 +4,12 @@ import com.bricks.challanger.models.dtos.CategoryDTO;
 
 import java.util.List;
 
-public interface CategoryService extends AbstractService<CategoryDTO, Long> {
+public interface CategoryService {
+
+    CategoryDTO findByNameAndCode(String name, String code);
 
     void updateCategories(List<CategoryDTO> categories);
+
+    List<CategoryDTO> readAll();
 
 }

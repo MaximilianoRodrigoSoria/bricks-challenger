@@ -24,7 +24,9 @@ public class Product {
 
     private int stock;
 
-    private int category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Enumerated(EnumType.STRING)
     private State state;

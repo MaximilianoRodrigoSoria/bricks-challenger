@@ -20,7 +20,10 @@ public class Category {
     private String code;
     private String name;
     private String description;
+    @Column(length = 10000000)
     private String icon;
     @Enumerated(EnumType.STRING)
     private State state;
 }
+
+

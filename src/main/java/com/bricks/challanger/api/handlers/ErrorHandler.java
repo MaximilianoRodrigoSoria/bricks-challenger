@@ -2,6 +2,7 @@ package com.bricks.challanger.api.handlers;
 import com.bricks.challanger.api.handlers.responses.BaseErrorResponse;
 import com.bricks.challanger.api.handlers.responses.ErrorResponse;
 import com.bricks.challanger.api.handlers.responses.ErrorsResponse;
+import com.bricks.challanger.utils.exceptions.CategoryNotFoundException;
 import com.bricks.challanger.utils.exceptions.IdNotFoundException;
 import org.springframework.http.HttpStatus;
 
@@ -15,9 +16,9 @@ import java.util.ArrayList;
 
 @RestControllerAdvice
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BadRequestHandler {
+public class ErrorHandler {
 
-    @ExceptionHandler({IdNotFoundException.class})
+    @ExceptionHandler({IdNotFoundException.class, CategoryNotFoundException.class})
     public BaseErrorResponse notFoundExceptions(RuntimeException exception){
         return  ErrorResponse.builder()
                 .message(exception.getMessage())
