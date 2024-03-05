@@ -1,12 +1,12 @@
 package com.bricks.challanger.services.impl;
 
 
-import com.bricks.challanger.clients.CategoryClient;
 import com.bricks.challanger.models.dtos.ProductDTO;
 import com.bricks.challanger.models.entities.Product;
 import com.bricks.challanger.repositories.ProductRepository;
 import com.bricks.challanger.services.CategoryService;
 import com.bricks.challanger.services.ProductService;
+import com.bricks.challanger.utils.GlobalConstants;
 import com.bricks.challanger.utils.enums.State;
 import com.bricks.challanger.utils.exceptions.IdNotFoundException;
 import com.bricks.challanger.utils.exceptions.SaveException;
@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     private ProductMapper mapper;
+    private final String KEY = this.getClass().getSimpleName() + " ->";
 
     @Override
     public List<ProductDTO> readAll() {
@@ -47,8 +48,8 @@ public class ProductServiceImpl implements ProductService {
         try {
             product = productRepository.save(mapper.toEntity(request));
         } catch (Exception e) {
-            log.error("Registration could not be saved in products");
-            throw new SaveException("Product");
+            log.error("{} Registration could not be saved in products", KEY);
+            throw new SaveException(GlobalConstants.PRODUCT_TABLE);
         }
         return mapper.toModel(product);
     }
@@ -56,8 +57,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO read(Long id) {
         var product = productRepository.findById(id).orElseThrow(()-> {
-        log.error("Error reading the product with the id {}", id);
-        throw new IdNotFoundException("Product");});
+        log.error("{} Error reading the product with the id {}", id, KEY);
+        throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE);});
         return mapper.toModel(product);
     }
 
@@ -65,8 +66,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO update(ProductDTO request, Long id) {
         var product = productRepository.findById(id);
         if (product.isEmpty()){
-            log.error("Error updating the product with the id {}", id);
-            throw new IdNotFoundException("Product");
+            log.error("{} Error updating the product with the id {}", id, KEY);
+            throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE);
         }
         created(request);
         return request;
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         var product = productRepository.findById(id).orElseThrow(()-> {
             log.error("Error reading the product with the id {}", id);
-            throw new IdNotFoundException("Product");});
+            throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE);});
         product.setState(State.DISABLED);
         productRepository.save(product);
     }
