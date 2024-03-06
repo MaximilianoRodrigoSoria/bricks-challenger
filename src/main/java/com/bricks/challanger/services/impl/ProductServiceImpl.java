@@ -81,8 +81,8 @@ public class ProductServiceImpl implements ProductService {
         BeanUtils.copyProperties(request, product);
         product.setCategory(categoryMapper.toEntity(category));
         product.setState(State.ENABLED);
-        productRepository.save(product);
-        return request;
+        var saveProduct =productRepository.save(product);
+        return mapper.toModel(saveProduct);
 
     }
 
