@@ -10,6 +10,5 @@ public interface CategoryService {
 
     void updateCategories(List<CategoryDTO> categories);
 
-    List<CategoryDTO> readAll();
 
 }
