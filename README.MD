@@ -61,9 +61,6 @@ Your Spring Boot API should now be accessible at the default port 8080. Open you
 
 
 
-
-> [!NOTE]
-> You can access the certificate by clicking on the image.
 ---
 <br/>
 
