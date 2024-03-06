@@ -23,7 +23,7 @@ public interface ProductController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResponse.class))
             }
     )
-    @Operation(summary = "Return a page with Product can be sorted for timestamp or not")
+    @Operation(summary = "Return a list with Products")
     public ResponseEntity<List<ProductDTO>> getAll();
 
 
