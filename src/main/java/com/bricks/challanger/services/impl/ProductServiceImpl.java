@@ -9,6 +9,7 @@ import com.bricks.challanger.services.ProductService;
 import com.bricks.challanger.utils.GlobalConstants;
 import com.bricks.challanger.utils.enums.State;
 import com.bricks.challanger.utils.exceptions.IdNotFoundException;
+import com.bricks.challanger.utils.exceptions.NameNotFoundException;
 import com.bricks.challanger.utils.exceptions.SaveException;
 import com.bricks.challanger.utils.mappers.CategoryMapper;
 import com.bricks.challanger.utils.mappers.ProductMapper;
@@ -71,10 +72,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO update(ProductDTO request, Long id) {
-        var product =  productRepository.findByIdAndState(id,State.ENABLED).orElseThrow(()-> {
-            log.error("{} Error reading the product with the id {}", KEY,id);
-            throw new IdNotFoundException(GlobalConstants.PRODUCT_TABLE); });
+    public ProductDTO update(ProductDTO request) {
+        var product =  productRepository.findByNameAndState(request.getName(),State.ENABLED).orElseThrow(()-> {
+            log.error("{} Error reading the product with the name {}", KEY,request.getName());
+            throw new NameNotFoundException(GlobalConstants.PRODUCT_TABLE); });
 
         var category = categoryService.findByNameAndCode(request.getCategory().getName(),request.getCategory().getCode());
         BeanUtils.copyProperties(request, product);

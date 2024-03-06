@@ -35,9 +35,9 @@ public class ProductControllerImpl implements ProductController {
     }
 
 
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<ProductDTO> put(@PathVariable Long id, @RequestBody ProductDTO request) {
-        return ResponseEntity.ok(service.update(request, id));
+    @PutMapping
+    public ResponseEntity<ProductDTO> put(@RequestBody ProductDTO request) {
+        return ResponseEntity.ok(service.update(request));
     }
 
 

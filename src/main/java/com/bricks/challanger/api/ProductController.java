@@ -36,7 +36,7 @@ public interface ProductController {
 
 
     @Operation(summary = "Update Product")
-    public ResponseEntity<ProductDTO> put(@PathVariable Long id, @RequestBody ProductDTO request);
+    public ResponseEntity<ProductDTO> put(@RequestBody ProductDTO request);
 
 
     @Operation(summary = "Delete a Product")
